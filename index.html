@@ -3,11 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample GitHub Pages Site</title>
-    <link rel="stylesheet" href="styling.css">
+    <title>Memory List</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
 </head>
 <body>
-    <h1>Welcome to My GitHub Page</h1>
-    <p>This is a basic page hosted on GitHub Pages with custom CSS styling.</p>
+    <h1>Memories</h1>
+    <div id="memories"></div>
+
+    <script>
+        async function fetchYamlData(url) {
+            const response = await fetch(url);
+            const yamlText = await response.text();
+            return jsyaml.load(yamlText);
+        }
+
+        function displayMemories(data) {
+            const memoriesDiv = document.getElementById('memories');
+            data.memories.forEach(memory => {
+                const memoryDiv = document.createElement('div');
+                memoryDiv.className = 'memory';
+                memoryDiv.innerHTML = `<strong>${memory.date}</strong>: ${memory.message}`;
+                memoriesDiv.appendChild(memoryDiv);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const data = await fetchYamlData('memories.yaml');
+            displayMemories(data);
+        });
+    </script>
 </body>
 </html>
